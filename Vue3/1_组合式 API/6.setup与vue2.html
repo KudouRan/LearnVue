@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <h1>{{ dataA }}</h1>
+      <h1>{{ setupA }}</h1>
+      <h1>{{ display }}</h1>
+      <p><button @click="methodsClickHandle">点击methodsClickHandle</button></p>
+      <p><button @click="setupClickHandle">点击setupClickHandle</button></p>
+    </div>
+    <script type="module">
+      import { createApp, ref } from '../lib/vue.esm-browser.3.0.7.js';
+
+      // setup会在所有vue2选项之前解析,不能访问到vue2选项中的数据
+      //相反,setup中的定义项会暴露给this而被vue2选项访问并且修改
+      const App = {
+        data() {
+          return {
+            dataA: 'this is dataA',
+          };
+        },
+        methods: {
+          methodsClickHandle() {
+            console.log(this);
+            console.log('来自methods,打印setupA', this.setupA);
+            this.display = '看控制台';
+          },
+        },
+        setup() {
+          const setupA = 'this is setupA';
+          const display = ref('');
+          const setupClickHandle = function () {
+            console.log(this);
+            //this 是空的
+            console.log('来自setup,打印dataA');
+            display.value = '还是看控制台';
+          };
+          return {
+            setupA,
+            setupClickHandle,
+            display,
+          };
+        },
+      };
+
+      const app = createApp(App);
+      app.mount('#app');
+    </script>
+  </body>
+</html>

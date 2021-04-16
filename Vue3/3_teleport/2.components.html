@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <div id="app"></div>
+    <template id="parent-component">
+      <h2>这是一个父组件的内容</h2>
+      <button @click="disabledValue = !disabledValue">改变disabled</button>
+      <teleport to="#app" :disabled="disabledValue">
+        <child-component name="John" />
+      </teleport>
+      <hr color="blue" />
+    </template>
+    <template id="child-component">
+      <div>这是子组件的内容</div>
+      <div>Hello, {{ name }}</div>
+      <hr color="deepinpink" />
+    </template>
+    <script type="module">
+      import { createApp } from '../lib/vue.esm-browser.3.0.7.js';
+
+      const app = createApp({
+        template: `
+          <h1>根示例</h1>
+          <parent-component />
+          <hr color="green"/>
+        `,
+      });
+
+      app.component('parent-component', {
+        template: '#parent-component',
+        data() {
+          return {
+            disabledValue: false,
+          };
+        },
+      });
+
+      app.component('child-component', {
+        props: ['name'],
+        template: '#child-component',
+      });
+
+      app.mount('#app');
+    </script>
+  </body>
+</html>
